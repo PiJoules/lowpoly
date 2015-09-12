@@ -16,7 +16,7 @@ $ python poly.py http://static.guim.co.uk/sys-images/Guardian/About/General/2011
 ```
 
 ### Flask server
-To start the server, just run `python __init__.py` and open the browser at `127.0.0.1:5000`. Passing the url to the image as the `url` parameter will process the image (`127.0.0.1:5000?url=http://static.guim.co.uk/sys-images/Guardian/About/General/2011/9/7/1315413211669/A-fruit-bowl-007.jpg`).
+To start the server, just run `python __init__.py` and open the browser at `127.0.0.1:5000`.
 
 ## Resources
 - [Triangulation Method](https://medium.com/@polygenapp/how-polygen-uses-gradients-and-delaunay-triangulation-to-generate-beautiful-patterns-ac9b7f94eadb)

@@ -14,6 +14,9 @@ from PIL import Image
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 
+"""
+Just check if the file is one of the allowed file types.
+"""
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
@@ -33,6 +36,8 @@ def index():
 				base64 = poly.img_to_base64(img)
 				return render_template("index.html", content=base64)
 			elif f and allowed_file(f.filename.lower()):
+				# Can get the image file data without having to save it
+				# on the system.
 				img = Image.open(StringIO.StringIO(f.read())).convert("RGB")
 				img = poly.get_poly(img)
 				base64 = poly.img_to_base64(img)

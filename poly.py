@@ -5,8 +5,7 @@ vendor.add("lib")
 from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
 import random
 import numpy
-from scipy.spatial import distance, Delaunay
-import math
+from scipy.spatial import Delaunay
 import base64
 import sys
 from StringIO import StringIO
@@ -15,6 +14,10 @@ from poisson_disk import sample_poisson
 from enhanced_grid import Grid2D
 
 
+"""
+Get the averaage color of a triangled area in the pic.
+This will be the color of the resultant triangle.
+"""
 def average_color(vertices, mask, source):
     x0 = min(p[0] for p in vertices)
     x1 = max(p[0] for p in vertices)
@@ -26,6 +29,9 @@ def average_color(vertices, mask, source):
     return result
 
 
+"""
+Add the triangles on a new image
+"""
 def triangulation(x, y, draw, source):
 	T = Delaunay( numpy.array( zip(x,y) ) ).simplices
 	mask = Image.new('L', source.size, 0)
@@ -37,10 +43,16 @@ def triangulation(x, y, draw, source):
 	    mask_draw.polygon( vertices, fill = 0 )
 
 
+"""
+Check the color of the pixel at P
+"""
 def P(x,y,source,edges):
     return 0.1 if edges.getpixel((x,y))>50 else 0
 
 
+"""
+Getting an image object from a path/url
+"""
 def get_image(url):
 	try:
 		if "http" in url:
@@ -53,88 +65,9 @@ def get_image(url):
 	return img.convert("RGB")
 
 
-def image_to_grid(point, cellsize):
-	x = int(point[0] / cellsize)
-	y = int(point[1] / cellsize)
-	return (x,y)
-
-
-def random_point_around(point, mindist):
-	r1 = random.random()
-	r2 = random.random()
-
-	# Random radius between mindist and 2 * mindist
-	radius = mindist*(r1+1)
-
-	# Random angle
-	angle = 2*math.pi*r2
-
-	# The new point is generated around the point (x, y)
-	x = point[0] + radius * math.cos(angle)
-	y = point[1] + radius * math.sin(angle)
-	return (x,y)
-
-
 """
-Check to see if the point is in the bounds of the image
+Polygonization method
 """
-def in_rectangle(point, w, h):
-	x,y = point
-	return x > 0 and y > 0 and x < w and y < h
-
-
-def in_neighborhood(grid, point, mindist, cellsize):
-	gridX, gridY = image_to_grid(point, cellsize)
-	x1,y1 = point
-	for cellY in xrange(len(grid)):
-		for cellX in xrange(len(grid[0])):
-			if cellX >= gridX-2 and cellY >= gridY-2 and cellX <= gridX+2 and cellY <= gridY+2:
-				cell = grid[cellY][cellX] # floating point coords
-				if cell != None:
-					x2,y2 = cell
-					if math.sqrt( (x1-x2)**2 + (y1-y2)**2 ) < mindist:
-						return True
-	return False
-
-
-
-def poisson(w, h, mindist, new_points_count):
-	cellsize = mindist/math.sqrt(2)
-	grid = [ [None]*int(math.ceil(w/cellsize)) ]*int(math.ceil(h/cellsize))
-	processlist = []
-	samplepoints = []
-
-	# Get a random point
-	firstpoint = (random.uniform(0,w), random.uniform(0,h))
-
-	# Update containers
-	processlist.append(firstpoint)
-	samplepoints.append(firstpoint)
-	gridX, gridY = image_to_grid(firstpoint, cellsize)
-	grid[gridY][gridX] = firstpoint
-
-	# Generate other points from points in queue
-	while len(processlist) > 0:
-		# Get a random point then delete it
-		rand_index = random.randrange(len(processlist))
-		point = processlist[rand_index]
-		del processlist[rand_index]
-
-		for i in xrange(new_points_count):
-			newpoint = random_point_around(point, mindist)
-
-			# Check that the point is in the image region
-			# and no points exists in the point's neighbourhood
-			if in_rectangle(newpoint, w, h) and not in_neighborhood(grid, newpoint, mindist, cellsize):
-				# Update containers
-				processlist.append(newpoint)
-				samplepoints.append(newpoint)
-				gridX, gridY = image_to_grid(newpoint, cellsize)
-				grid[gridY][gridX] = newpoint
-
-	return samplepoints
-
-
 def get_poly(image, mindist=60.0, factor=3.0):
 	draw = ImageDraw.Draw(image)
 	width, height = image.size
@@ -155,6 +88,11 @@ def get_poly(image, mindist=60.0, factor=3.0):
 	return image
 
 
+"""
+Use base64 to prevent from saving the data on the
+system and instead return the actual contained in 
+the image.
+"""
 def img_to_base64(img, img_type="PNG"):
 	output = StringIO()
 	img.save(output, format=img_type)
@@ -173,5 +111,6 @@ if __name__ == "__main__":
 	poly_img = get_poly(image)
 	poly_img.show()
 	if len(sys.argv) >= 3:
+		# Save the image if the output path is provided
 		result_file = sys.argv[2]
 		poly_img.save(result_file)
