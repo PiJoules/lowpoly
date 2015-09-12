@@ -49,7 +49,7 @@ def get_image(url):
 	except IOError:
 		return None
 
-	return img
+	return img.convert("RGB")
 
 
 def image_to_grid(point, cellsize):
@@ -134,9 +134,7 @@ def poisson(w, h, mindist, new_points_count):
 	return samplepoints
 
 
-def get_poly(url, mindist=60.0, factor=3.0):
-	image = get_image(url).convert("RGB")
-
+def get_poly(image, mindist=60.0, factor=3.0):
 	draw = ImageDraw.Draw(image)
 	width, height = image.size
 
@@ -161,5 +159,9 @@ if __name__ == "__main__":
 		sys.exit()
 	img_path = sys.argv[1]
 
-	poly_img = get_poly(img_path)
+	image = get_image(img_path)
+	poly_img = get_poly(image)
 	poly_img.show()
+	if len(sys.argv) >= 3:
+		result_file = sys.argv[2]
+		poly_img.save(result_file)
