@@ -26,28 +26,32 @@ def allowed_file(filename):
 @app.route('/', methods=["GET", "POST"])
 def index():
 	if request.method == "POST":
-		url = request.args.get("url")
-		f = request.files['file']
-		print f.filename.lower()
-		if url:
-			img = poly.get_image(url)
-			img = poly.get_poly(img)
-			output = StringIO.StringIO()
-			img.save(output, format='PNG')
-			output.seek(0)
-			output_s = output.read()
-			b64 = base64.b64encode(output_s)
-			return render_template("index.html", content='{0}'.format(b64))
-		elif f and allowed_file(f.filename.lower()):
-			img = Image.open(StringIO.StringIO(f.read())).convert("RGB")
-			img = poly.get_poly(img)
-			output = StringIO.StringIO()
-			img.save(output, format='PNG')
-			output.seek(0)
-			output_s = output.read()
-			b64 = base64.b64encode(output_s)
-			return render_template("index.html", content='{0}'.format(b64))
-		else:
+		# Just in case the content at the url is not an image.
+		# Aren't I a gr8 programmer?
+		try:
+			url = request.form.get("url")
+			f = request.files['file']
+			if url:
+				img = poly.get_image(url)
+				img = poly.get_poly(img)
+				output = StringIO.StringIO()
+				img.save(output, format='PNG')
+				output.seek(0)
+				output_s = output.read()
+				b64 = base64.b64encode(output_s)
+				return render_template("index.html", content='{0}'.format(b64))
+			elif f and allowed_file(f.filename.lower()):
+				img = Image.open(StringIO.StringIO(f.read())).convert("RGB")
+				img = poly.get_poly(img)
+				output = StringIO.StringIO()
+				img.save(output, format='PNG')
+				output.seek(0)
+				output_s = output.read()
+				b64 = base64.b64encode(output_s)
+				return render_template("index.html", content='{0}'.format(b64))
+			else:
+				return render_template("index.html", content=False)
+		except:
 			return render_template("index.html", content=False)
 	return render_template("index.html", content=False)
 

@@ -38,13 +38,13 @@
 		<div class="container">
 			<h1>Low Poly Mesh Converter</h1>
 			<blockquote>
-				<p>Create low poly meshes of images. Just provide either the URL to the image or upload an image to polygonize.</p>
+				<p>Create low poly meshes of images. Just provide either the URL to the image or upload an image to polygonize. Note that larger, hi-res images will take longer to process.</p>
 			</blockquote>
 
 			<p>
 				<form class="form-inline" enctype="multipart/form-data" method="POST" action="/">
 				  	<div class="form-group">
-				    	<input type="text" class="form-control" name="url" placeholder="Image URL" />
+				    	<input type="url" class="form-control" name="url" placeholder="Image URL" />
 				  	</div>
 				  	<div class="form-group">or</div>
 				  	<div class="form-group">
@@ -52,12 +52,6 @@
 				  	</div>
 				  	<button type="submit" class="btn btn-default">Submit</button>
 				</form>
-<!-- 				<form id="file" class="form-inline" method="POST" action="/" enctype="multipart/form-data">
-				  	<div class="form-group">
-				    	<input type="file" name="file" />
-				  	</div>
-				  	<button type="submit" class="btn btn-default">Upload</button>
-				</form> -->
 			</p>
 
 			<div class="row">
@@ -69,47 +63,5 @@
 
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		<script type="text/javascript">
-			// $("#link").submit(function(event){
-			// 	event.preventDefault(); // don't refresh page
-
-			// 	var inputs = $(this).serializeArray(); // for some reason, returns an array of objects
-			// 	console.log(inputs);
-			// 	var formObj = {};
-			// 	for (var i = 0; i < inputs.length; i++)
-			// 		formObj[inputs[i].name] = inputs[i].value;
-
-			// 	if (formObj["url"] === ""){
-			// 		alert("You must choose either a URL or an image to upload.");
-			// 		return;
-			// 	}
-
-		 //        $.post("/", formObj, function(response){
-		 //            console.log(response);
-		 //        }).fail(function(jqXHR, textStatus, errorThrown){
-		 //            alert([textStatus, errorThrown]);
-		 //        });
-			// });
-			// $("#file").submit(function(event){
-			// 	event.preventDefault(); // don't refresh page
-
-			// 	var inputs = $(this).serializeArray(); // for some reason, returns an array of objects
-			// 	console.log(inputs);
-			// 	var formObj = {};
-			// 	for (var i = 0; i < inputs.length; i++)
-			// 		formObj[inputs[i].name] = inputs[i].value;
-
-			// 	if (formObj["file"] === ""){
-			// 		alert("You must choose either a URL or an image to upload.");
-			// 		return;
-			// 	}
-
-		 //        $.post("/mesh", formObj, function(response){
-		 //            console.log(response);
-		 //        }).fail(function(jqXHR, textStatus, errorThrown){
-		 //            alert([textStatus, errorThrown]);
-		 //        });
-			// });
-		</script>
 	</body>
 </html>
