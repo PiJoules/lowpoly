@@ -1,0 +1,8 @@
+# This requirements file lists all third-party dependencies for this project.
+#
+# Run 'pip install -r requirements.txt -t lib/' to install these dependencies
+# in `lib/` subdirectory.
+
+Flask==0.10
+requests==2.5.3
+Pillow==2.7.0
