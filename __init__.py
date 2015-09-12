@@ -5,14 +5,10 @@ vendor.add('lib')
 
 # Import the Flask Framework
 from flask import Flask, render_template, url_for, request
-from werkzeug import secure_filename
 app = Flask(__name__)
 
-import json
 import poly
-import base64
 import StringIO
-import os
 from PIL import Image
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
@@ -34,21 +30,13 @@ def index():
 			if url:
 				img = poly.get_image(url)
 				img = poly.get_poly(img)
-				output = StringIO.StringIO()
-				img.save(output, format='PNG')
-				output.seek(0)
-				output_s = output.read()
-				b64 = base64.b64encode(output_s)
-				return render_template("index.html", content='{0}'.format(b64))
+				base64 = poly.img_to_base64(img)
+				return render_template("index.html", content=base64)
 			elif f and allowed_file(f.filename.lower()):
 				img = Image.open(StringIO.StringIO(f.read())).convert("RGB")
 				img = poly.get_poly(img)
-				output = StringIO.StringIO()
-				img.save(output, format='PNG')
-				output.seek(0)
-				output_s = output.read()
-				b64 = base64.b64encode(output_s)
-				return render_template("index.html", content='{0}'.format(b64))
+				base64 = poly.img_to_base64(img)
+				return render_template("index.html", content=base64)
 			else:
 				return render_template("index.html", content=False)
 		except:
@@ -57,4 +45,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run()
+    #app.run(host="0.0.0.0") # For development
+    app.run() # For production

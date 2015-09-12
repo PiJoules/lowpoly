@@ -7,6 +7,7 @@ import random
 import numpy
 from scipy.spatial import distance, Delaunay
 import math
+import base64
 import sys
 from StringIO import StringIO
 import requests
@@ -152,6 +153,15 @@ def get_poly(image, mindist=60.0, factor=3.0):
 	            y.append(j)
 	triangulation(x,y,draw,image)
 	return image
+
+
+def img_to_base64(img, img_type="PNG"):
+	output = StringIO()
+	img.save(output, format=img_type)
+	output.seek(0)
+	output_s = output.read()
+	b64 = base64.b64encode(output_s)
+	return '{0}'.format(b64)
 
 
 if __name__ == "__main__":
