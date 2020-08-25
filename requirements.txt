@@ -4,5 +4,5 @@
 # in `lib/` subdirectory.
 
 Flask==0.10
-requests==2.5.3
+requests==2.20.0
 Pillow==2.7.0
